@@ -1,0 +1,10 @@
+.idea/
+.idea/inspectionProfiles/Project_Default.xml
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/modules.xml
+.idea/nyc-taxi-etl.iml
+.idea/vcs.xml
+.idea/workspace.xml
+airflow/dags/__pycache__/
+data/
+nyc_schemas.txt
