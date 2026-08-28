@@ -1,5 +1,4 @@
 .idea/
 airflow/dags/__pycache__/
 nyc_schemas.txt
-data1/**
-!data1/**/
+data/
