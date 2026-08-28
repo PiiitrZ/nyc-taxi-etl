@@ -2,3 +2,7 @@
 airflow/dags/__pycache__/
 nyc_schemas.txt
 data/
+.DS_Store
+tests/__pycache__/
+tests/unit/__pycache__/
+tests/unit/etl/__pycache__/

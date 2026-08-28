@@ -42,17 +42,21 @@ def test_join_on_zone():
 
 
 def test_enhance():
-    df = pl.DataFrame(
-    {"pickup_datetime": [datetime(2026, 1, 1, 1, 0), datetime(2026, 1, 2, 2, 0), ],
-     "dropoff_datetime": [datetime(2026, 1, 1, 1, 10), datetime(2026, 1, 2, 2, 20), ],
-     "Borough": ["Manhattan", "Brooklyn"], "Zone": ["Midtown", "Downtown"], "trip_time": [None, 123],
-     "trip_distance": [5.5, None], "trip_miles": [None, 10.0], "fare_amount": [20.0, None],
-     "base_passenger_fare": [None, 30.0], "total_amount": [25.0, None], "driver_pay": [None, 40.0],
-     "tips": [None, 5.0], })
+    df = pl.DataFrame({"pickup_datetime": [datetime(2026, 1, 1, 1, 0),
+                                           datetime(2026, 1, 2, 2, 0), ],
+                       "dropoff_datetime": [datetime(2026, 1, 1, 1, 10),
+                                            datetime(2026, 1, 2, 2, 20), ],
+                       "Borough": ["Manhattan", "Brooklyn"], "Zone": ["Midtown", "Downtown"], "trip_time": [None, 123],
+                       "trip_distance": [5.5, None], "trip_miles": [None, 10.0], "fare_amount": [20.0, None],
+                       "base_passenger_fare": [None, 30.0], "total_amount": [25.0, None], "driver_pay": [None, 40.0],
+                       "tips": [None, 5.0], })
 
-    expected = pl.DataFrame({"pickup_datetime": [datetime(2026, 1, 1, 1, 0), datetime(2026, 1, 2, 2, 0), ],
-                             "dropoff_datetime": [datetime(2026, 1, 1, 1, 10), datetime(2026, 1, 2, 2, 20), ],
-                             "Borough": ["Manhattan", "Brooklyn"], "Zone": ["Midtown", "Downtown"],
+    expected = pl.DataFrame({"pickup_datetime": [datetime(2026, 1, 1, 1, 0),
+                                                 datetime(2026, 1, 2, 2, 0), ],
+                             "dropoff_datetime": [datetime(2026, 1, 1, 1, 10),
+                                                  datetime(2026, 1, 2, 2, 20), ],
+                             "Borough": ["Manhattan", "Brooklyn"],
+                             "Zone": ["Midtown", "Downtown"],
                              "trip_time": [None, 123], "trip_distance": [5.5, 10.0], "trip_miles": [None, 10.0],
                              "fare_amount": [20.0, None], "base_passenger_fare": [None, 30.0],
                              "total_amount": [25.0, None], "driver_pay": [None, 40.0], "tips": [None, 5.0],
@@ -60,6 +64,7 @@ def test_enhance():
                              "borough_zone": ["Manhattan/Midtown", "Brooklyn/Downtown", ],
                              "trip_duration": [600.0, 123.0], "trip_fare": [20.0, 30.0],
                              "trip_earnings": [25.0, 45.0], })
+
     result = Transformations.enhance(df)
 
     assert result.equals(expected)
