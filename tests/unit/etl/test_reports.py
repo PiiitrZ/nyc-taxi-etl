@@ -7,27 +7,39 @@ transformer = Transformations(date(2026, 8, 28), 2026, 1)
 
 
 def test_join_on_zone():
-    df_lookup = pl.DataFrame({ "LocationID": [1, 2],
-                               "Zone": ["Manhattan", "Brooklyn"], })
+    df_lookup = pl.DataFrame({
+        "LocationID": [1, 2],
+        "Zone": ["Manhattan", "Brooklyn"],
+    })
 
-    df_taxi = pl.DataFrame({ "PULocationID": [1],
-                             "trip_distance": [5.5],
-                             "ride_type": ["taxi"], })
+    df_taxi = pl.DataFrame({
+        "PULocationID": [1],
+        "trip_distance": [5.5],
+        "ride_type": ["taxi"],
+    })
 
-    df_rental = pl.DataFrame({ "PULocationID": [2],
-                               "trip_miles": [10.0],
-                               "ride_type": ["rental"], })
+    df_rental = pl.DataFrame({
+        "PULocationID": [2],
+        "trip_miles": [10.0],
+        "ride_type": ["rental"],
+    })
 
-    expected = pl.DataFrame({ "LocationID": [1, 2, 1, 2],
-                              "Zone": ["Manhattan", "Brooklyn", "Manhattan", "Brooklyn"],
-                              "trip_distance": [5.5, None, None, None],
-                              "ride_type": ["taxi", None, None, None],
-                              "PULocationID": [1, None, None, 2],
-                              "trip_miles": [None, None, None, 10.0], })
+    expected = pl.DataFrame({
+        "LocationID": [1, 2, 1, 2],
+        "Zone": ["Manhattan", "Brooklyn", "Manhattan", "Brooklyn"],
+        "trip_distance": [5.5, None, None, None],
+        "ride_type": ["taxi", None, None, "rental"],
+        "trip_miles": [None, None, None, 10.0],
+    })
 
-    result = Transformations.join_on_zone(df_lookup, df_taxi, df_rental)
+    result = Transformations.join_on_zone(
+        df_lookup,
+        df_taxi,
+        df_rental,
+    )
 
     assert result.equals(expected)
+
 
 def test_enhance():
     df = pl.DataFrame({"pickup_datetime": ["2026-01-01 01:00:00", "2026-01-02 02:00:00", ],
