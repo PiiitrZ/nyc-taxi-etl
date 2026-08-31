@@ -11,3 +11,6 @@ services:
       - ./dags:/opt/airflow/dags
       - /var/run/docker.sock:/var/run/docker.sock
     command: standalone
+
+# Airflow container needs access to the Docker daemon in order to create your nyc-tax-etl container. That's why this is here:
+#   - /var/run/docker.sock:/var/run/docker.sock

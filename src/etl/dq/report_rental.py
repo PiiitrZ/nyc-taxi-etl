@@ -6,7 +6,7 @@ from src.etl.dq.rules import RULES_RENTAL
 def main(processing_date, reporting_year, reporting_month):
     reader = Reader(processing_date, (reporting_year, reporting_month))
 
-    df = reader.read_trip_data_raw(TripDataType.fhvhv).limit(500)
+    df = reader.read_trip_data_raw(TripDataType.fhvhv)
 
     print_data_overview(df)
 

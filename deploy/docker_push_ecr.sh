@@ -1,0 +1,13 @@
+GV_CI_REGISTRY=$1
+GV_IMAGE=$2
+GV_SOURCE_TAG=$3
+GV_AWS_ECR_DOMAIN=$4
+GV_TARGET_TAG=$5
+
+DOCKER_IMAGE_GL=$GV_CI_REGISTRY:$GV_SOURCE_TAG
+DOCKER_IMAGE_AWS=$GV_AWS_ECR_DOMAIN/$GV_IMAGE:$GV_TARGET_TAG
+
+docker pull $DOCKER_IMAGE_GL
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin $GV_AWS_ECR_DOMAIN
+docker tag $DOCKER_IMAGE_GL $DOCKER_IMAGE_AWS
+docker push $DOCKER_IMAGE_AWS

@@ -1,7 +1,8 @@
 import argparse
 import polars as pl
 from datetime import date, datetime
-from src.etl import INPUT_DATA_PATH, LOOKUP_FILE_NAME, OUTPUT_DATA_PATH
+
+from src.etl import INPUT_DATA_PATH, LOOKUP_FILE_NAME, OUTPUT_DATA_PATH, DATA_RECORDS_LIMIT
 
 
 def get_arg_parser():
@@ -65,12 +66,12 @@ class Reader:
     @staticmethod
     def read_full_path(path: str, f_name: str, f_type: str = 'parquet') -> pl.DataFrame:
         full_path = f'{path}/{f_name}.{f_type}'
-        print(f'Reading from {full_path}')
+        print(f'Reading from {full_path} limited to {DATA_RECORDS_LIMIT}')
         match f_type:
             case 'parquet':
-                return pl.read_parquet(full_path)
+                return pl.read_parquet(full_path).limit(DATA_RECORDS_LIMIT)
             case 'csv':
-                return pl.read_csv(full_path)
+                return pl.read_csv(full_path).limit(DATA_RECORDS_LIMIT)
             case _:
                 raise ValueError(f"Wrong input value for f_type: {f_type}")
 

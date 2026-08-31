@@ -18,12 +18,12 @@ class Transformations(TransformationsEtl):
 
     @staticmethod
     def join_on_zone(df_lookup: DataFrame, df_taxi: DataFrame, df_rental: DataFrame):
-        df_zones_taxi = df_lookup.join(df_taxi.limit(100),
+        df_zones_taxi = df_lookup.join(df_taxi,
                                        left_on="LocationID",
                                        right_on="PULocationID",
                                        how="left")
 
-        df_zones_rental = df_lookup.join(df_rental.limit(100),
+        df_zones_rental = df_lookup.join(df_rental,
                                          left_on="LocationID",
                                          right_on="PULocationID",
                                          how="left")
