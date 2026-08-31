@@ -161,19 +161,19 @@ docker run --rm \
 
 
 # ETL pipeline
-1. **dq check source data**
+1. **dq checks source data**
    - reading data from data/input location (lookup, taxi yellow, taxi green, rental)
    - checks performed on each source separately
    - results in log
-2. **transform source data**
+2. **transforms source data**
    - reading data from data/input location (taxi yellow, taxi green, rental)
    - transform processes logically grouped (taxi/rental, lookup not needed to be processed)
    - results stored into data/output/transformed/trips location
    - tip: introduce partitioning also by trips
-3. **aggregate transformed data into report**
+3. **aggregates transformed data into report**
    - reading data from /data/output/transformed/trips location (taxi/rental) and /data/input/taxi_zone_lookup.csv
    - results stored into data/output/report location
-4. **read report results**
+4. **reads report results**
    - reading data from /data/output/report location (taxi/rental) and /data/input/taxi_zone_lookup.csv
 
 
@@ -462,7 +462,7 @@ deploy/docker_push_ecr.sh
 
 ---
 
-## ETL Deployment Options
+## Project Deployment Options
 
 ETL code can be deployed in either of two ways:
 
