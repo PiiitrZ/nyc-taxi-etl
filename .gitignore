@@ -1,8 +1,29 @@
-.idea/
-airflow/dags/__pycache__/
 nyc_schemas.txt
 data/
+
+# macOS
 .DS_Store
-tests/__pycache__/
-tests/unit/__pycache__/
-tests/unit/etl/__pycache__/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Packaging
+*.egg-info/
+build/
+dist/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE
+.idea/
+.vscode/

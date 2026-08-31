@@ -13,6 +13,7 @@ def get_docker_operator(_task_id, _command):
             command=_command,
             docker_url="unix://var/run/docker.sock",
             auto_remove="success",
+            mount_tmp_dir=False,
             mounts=[
                 Mount(
                     source="/Users/petr.zoldos/Code/nyc-taxi-etl/data",
@@ -27,7 +28,7 @@ default_args = {
     'depends_on_past': False
 }
 
-with DAG(
+with (DAG(
     dag_id='NYC-TAXI-ETL-PIPELINE',
     description='NYC taxi dataset processing',
     schedule='0 1 * * *',         # Daily at 01:00 AM
@@ -43,7 +44,7 @@ with DAG(
         "year_to_process": Param(default='2026', type="string",
                                  description="Year to process"),
     },
-) as dag:
+) as dag):
     date_dashed = '{{ params.date_dashed }}'
     month_to_process = '{{ params.month_to_process }}'
     year_to_process = '{{ params.year_to_process }}'
@@ -53,6 +54,30 @@ with DAG(
         print(f"Input parameters: {input_args}")
         print(f"Context: {ctx}")
         return input_args
+
+    dq_taxi_green = \
+        get_docker_operator(_task_id="dq-taxi-green",
+                            _command=["python",
+                                      "src/etl/dq/report_taxi_green.py",
+                                      f"--date={date_dashed}",
+                                      f"--year={year_to_process}",
+                                      f"--month={month_to_process}"])
+
+    dq_taxi_yellow = \
+        get_docker_operator(_task_id="dq-taxi-yellow",
+                            _command=["python",
+                                      "src/etl/dq/report_taxi_yellow.py",
+                                      f"--date={date_dashed}",
+                                      f"--year={year_to_process}",
+                                      f"--month={month_to_process}"])
+
+    dq_rental = \
+        get_docker_operator(_task_id="dq-rental",
+                            _command=["python",
+                                      "src/etl/dq/report_rental.py",
+                                      f"--date={date_dashed}",
+                                      f"--year={year_to_process}",
+                                      f"--month={month_to_process}"])
 
     process_taxi = \
         get_docker_operator(_task_id="process-taxi",
@@ -95,5 +120,8 @@ with DAG(
     #     auto_remove="success",
     # )
 
-    print_context((date_dashed, month_to_process, year_to_process)) >> [process_taxi, process_rental] >> aggregate_report
-    aggregate_report >> read_report
+    print_ctx = print_context((date_dashed, month_to_process, year_to_process))
+
+    print_ctx >> [dq_taxi_green, dq_taxi_yellow] >> process_taxi
+    print_ctx >> dq_rental >> process_rental
+    [process_taxi, process_rental] >> aggregate_report >> read_report
