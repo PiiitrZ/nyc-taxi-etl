@@ -23,5 +23,5 @@ jobs:
           python -m pip install -e ".[test]"
 
       - name: Run tests
-        run: python -m pytest tests/unit
+        run: python -m pytest src/tests/unit
 
