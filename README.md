@@ -12,7 +12,8 @@ This project demonstrates an end-to-end data pipeline including:
 - unit testing
 - basic deployment preparation
 
-> **POC disclaimer:** This project has not undergone QA. It is primarily a showcase of a working ETL pipeline. **The correctness of the generated results is not guaranteed.**
+> **POC disclaimer:** This project has not undergone QA. It is primarily a showcase of a working ETL pipeline. 
+> **The correctness of the generated results is not guaranteed.**
 
 ---
 
@@ -53,7 +54,9 @@ Both parts are separately containerized using Docker.
 
 The exact Docker build and execution commands are described in the [Running](#running) section.
 
-> In a production implementation, it would be good practice to separate the ETL code and orchestration code into different repositories. They are kept in a single repository here because the task requires a single repository containing both.
+> In a production implementation, it would be good practice to separate the ETL code and orchestration code into 
+> different repositories. They are kept in a single repository here because the task requires a single repository 
+> containing both.
 
 ---
 
@@ -107,7 +110,8 @@ airflow-1  | Simple auth manager | Password for user 'admin': TmhM8przdKzsqwpA
 
 ## Running ETL Scripts Independently
 
-After completing step 1, the Python ETL scripts can also be executed independently without Airflow.
+After completing step 1, the Python ETL scripts can also be executed independently without Airflow (data input/output 
+structure has to be already in place - more in [Data Structure](#data-structure) section).
 
 For example:
 
@@ -161,7 +165,7 @@ docker run --rm \
 
 
 # ETL pipeline
-1. **dq checks source data**
+1. **checks source data quality**
    - reading data from *data/input* location (lookup, taxi yellow, taxi green, rental)
    - checks performed on each source separately
    - results in log
@@ -218,7 +222,8 @@ The `nyc_taxi_etl.py` DAG defines the ETL pipeline with the following tasks:
 
 Location for all input and output files.
 
-The directory is mounted into the Docker container as an external volume. This ensures that generated output is persisted even after the Docker container is terminated.
+The directory is mounted into the Docker container as an external volume. This ensures that generated output is persisted 
+even after the Docker container is terminated.
 
 The required folder structure must be created in advance.
 
@@ -274,7 +279,8 @@ The input/output directory structure is **static** and must be created in advanc
 
 Polars fails when attempting to store data into a directory that does not exist.
 
-Therefore, when processing a new month of source data, the required monthly/daily partitions must be created before reading and storing the data.
+Therefore, when processing a new month of source data, the required monthly/daily partitions must be created before 
+reading and storing the data.
 
 The expected structure is:
 
@@ -311,12 +317,17 @@ data_structure.zip
 Source data are partitioned by **year and month**, for example:
 
 ```text
-202601
+month=202601
 ```
 
-Project uses **daily partitioning for output data**.
+Project uses **daily partitioning for output data**, for example:
 
-Whether the final implementation should continue using daily output partitions or use monthly partitions instead is open for discussion. The choice depends on multiple aspects and expectations of the final implementation.
+```text
+day=20260826
+```
+Day partition represents day when the ETL pipeline was triggered. Whether the final implementation should continue 
+using daily output partitions or use monthly partitions instead is open for discussion. 
+The choice depends on multiple aspects and expectations of the final implementation.
 
 ---
 
@@ -477,13 +488,13 @@ The deployment scripts are prepared so they can also be used within a CI/CD pipe
 
 To make it possible to run the project locally with limited resources, a record limit is applied when reading the input data.
 
-The current limit is:
+Current limit is:
 
 ```text
 50,000 records
 ```
 
-The value is defined as the `DATA_RECORDS_LIMIT` constant in:
+Value is defined as `DATA_RECORDS_LIMIT` constant in:
 
 ```text
 src/etl/__init__.py
@@ -512,4 +523,5 @@ It demonstrates:
 - Draft AWS deployment options
 - CI/CD-ready deployment scripts
 
-The implementation is intentionally a POC and has **not been QA-validated**. Consequently, the generated ETL and reporting results should not be considered production-grade or guaranteed to be correct.
+The implementation is intentionally a POC and has **not been QA-validated**. 
+Consequently, the generated ETL and reporting results should not be considered production-grade or guaranteed to be correct.
