@@ -31,7 +31,7 @@ default_args = {
 with (DAG(
     dag_id='NYC-TAXI-ETL-PIPELINE',
     description='NYC taxi dataset processing',
-    schedule='schedule="0 1 1 * *"',         # Every first day of month at 01:00 AM
+    schedule='0 1 1 * *',         # Every first day of month at 01:00 AM
     start_date=datetime(year=2026, month=8, day=1, tzinfo=ZoneInfo("Europe/Prague")),
     tags=['nyc', 'taxi'],
     catchup=False,
